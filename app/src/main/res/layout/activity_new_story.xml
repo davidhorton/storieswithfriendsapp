@@ -1,0 +1,116 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:background="@color/background_color"
+    tools:context="com.storieswithfriends.activity.NewUserActivity"
+    android:columnCount="2">
+
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/txt_new_user_username"
+            android:id="@+id/textView_email"
+            android:layout_column="0"
+            android:layout_row="0" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/editText_email"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_column="1"
+            android:layout_row="0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/txt_new_user_display"
+            android:id="@+id/textView_display_name"
+            android:layout_column="0"
+            android:layout_row="1"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/editText_display_name"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/txt_new_user_password1"
+            android:id="@+id/textView_password1"
+            android:layout_column="0"
+            android:layout_row="2"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/editText_password1"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_column="1"
+            android:layout_row="2"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/txt_new_user_password2"
+            android:id="@+id/textView_password2"
+            android:layout_column="0"
+            android:layout_row="3"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/editText_password2"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_column="1"
+            android:layout_row="3"/>
+
+    </GridLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <Button
+            style="?android:textAppearanceSmall"
+            android:id="@+id/btn_submit_new_user"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/btn_new_user_submit"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:background="@drawable/purple_button_selector"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+</LinearLayout>

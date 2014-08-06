@@ -1,17 +1,17 @@
 package com.storieswithfriends.http;
 
 import android.content.Context;
-import android.util.JsonReader;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 import com.storieswithfriends.R;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
 
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
@@ -22,7 +22,7 @@ import retrofit.mime.TypedInput;
 import retrofit.mime.TypedOutput;
 
 /**
- * Created by student on 8/4/14.
+ * @author David Horton
  */
 public class RESTHelper {
 
@@ -32,8 +32,7 @@ public class RESTHelper {
      * @param gson GSON that will be used to convert the data of the request to JSON
      * @return RestAdapter
      */
-    public static RestAdapter setUpRestAdapterWithJsonResponse(Context context, Gson gson)
-    {
+    public static RestAdapter setUpRestAdapterWithJsonResponse(Context context, Gson gson) {
         RestAdapter.Builder builder = setUpRestAdapterBuilder(context);
 
         if (gson != null)
@@ -45,15 +44,28 @@ public class RESTHelper {
     /**
      * Sets up the RestAdapter, with a JSON response
      * @param context Android context
-     * @param gson GSON that will be used to convert the data of the request to JSON
      * @return RestAdapter
      */
-    public static RestAdapter setUpRestAdapterWithoutJsonResponse(Context context, Gson gson)
-    {
+    public static RestAdapter setUpRestAdapterWithoutJsonResponse(Context context) {
         RestAdapter.Builder builder = setUpRestAdapterBuilder(context);
 
-        if (gson != null)
-            builder.setConverter(new GsonConverter(gson));
+        builder.setConverter(new Converter() {
+            @Override
+            public Object fromBody(TypedInput body, Type type) throws ConversionException {
+                try {
+                    return convertStreamToString(body.in());
+                }
+                catch(IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            public TypedOutput toBody(Object object) {
+                return null;
+            }
+        });
 
         return builder.build();
     }
@@ -63,22 +75,12 @@ public class RESTHelper {
      * @param context Android Context
      * @return RestAdapter Builder
      */
-    private static RestAdapter.Builder setUpRestAdapterBuilder(Context context)
-    {
+    private static RestAdapter.Builder setUpRestAdapterBuilder(Context context) {
         OkHttpClient client = new OkHttpClient();
-
-        // This setHostnameVerifier line removes hostname verification!
-        // Remove when in the production environment!
-        /*client.setHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });*/
 
         OkClient okClient = new OkClient(client);
 
-        RestAdapter.Builder builder = new RestAdapter.Builder()
+        return new RestAdapter.Builder()
                 .setClient(okClient)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(context.getResources().getString(R.string.api_endpoint))
@@ -88,7 +90,72 @@ public class RESTHelper {
                         Log.i("STORIESWITHFRIENDS", msg);
                     }
                 });
+    }
 
-        return builder;
+    /**
+     * Sets up the RestAdapter Builder for the random word generator
+     * @param context Android Context
+     * @return RestAdapter Builder
+     */
+    public static RestAdapter setupRestAdapterBuilderForRandomWord(Context context) {
+
+        OkHttpClient client = new OkHttpClient();
+        OkClient okClient = new OkClient(client);
+
+        RestAdapter.Builder builder = new RestAdapter.Builder().setClient(okClient).setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(context.getResources().getString(R.string.api_endpoint_randomword))
+                .setLog(new RestAdapter.Log() {
+                    @Override
+                    public void log(String msg) {
+                        Log.i("STORIESWITHFRIENDS", msg);
+                    }
+                });
+
+        builder.setConverter(new Converter() {
+            @Override
+            public Object fromBody(TypedInput body, Type type) throws ConversionException {
+                try {
+                    return convertStreamToString(body.in());
+                }
+                catch(IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            public TypedOutput toBody(Object object) {
+                return null;
+            }
+        });
+
+        return builder.build();
+    }
+
+    /**
+     * Converts an InputStream to a String
+     * @param is - InputStream
+     * @return - String response
+     */
+    public static String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
     }
 }

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView" >
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <com.storieswithfriends.util.FlowLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,13 +15,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/flowLayout"/>
 
-    </ScrollView>
+
 
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/yourTurnButtonsContainer">
 
         <Button
@@ -52,6 +51,42 @@
             android:textColor="@android:color/white"
             android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
+        <Button
+            style="?android:textAppearanceSmall"
+            android:id="@+id/btn_finish_story"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/btn_finish_story"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:background="@drawable/purple_button_selector"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="@dimen/activity_horizontal_margin" />
+
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <Button
+            style="?android:textAppearanceSmall"
+            android:id="@+id/btn_return_to_main"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_return_to_main"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:background="@drawable/purple_button_selector"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
+    </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

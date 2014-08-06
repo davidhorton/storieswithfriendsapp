@@ -7,4 +7,10 @@
         android:title="Logout"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_add"
+        android:orderInCategory="0"
+        app:showAsAction="ifRoom|withText"
+        android:title="New Story"
+        android:icon="@android:drawable/ic_menu_add"/>
 </menu>

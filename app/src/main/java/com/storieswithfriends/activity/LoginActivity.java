@@ -9,23 +9,20 @@ import android.net.Uri;
 
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.storieswithfriends.R;
 import com.storieswithfriends.data.CurrentUser;
 import com.storieswithfriends.data.User;
-import com.storieswithfriends.fragment.MainMenuFragment;
 import com.storieswithfriends.fragment.ProgressDialogFragment;
 import com.storieswithfriends.http.RESTHelper;
 import com.storieswithfriends.http.StoriesService;
@@ -46,13 +43,7 @@ import retrofit.client.Response;
  */
 public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<Cursor>{
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
+    public final static String EMAIL_INTENT_EXTRA_KEY = "EMAIL";
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -69,6 +60,11 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
+
+        ActionBar ab = this.getSupportActionBar();
+        ab.setTitle(getResources().getString(R.string.app_name));
+
+        //TODO I uncommented this because I was having problems with it creating two intents to the main menu...
         /*mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -87,12 +83,32 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
                 attemptLogin();
             }
         });
+
+        Button register = (Button) findViewById(R.id.btn_register);
+        register.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pressedRegister();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mEmailView.setText("");
+        mPasswordView.setText("");
     }
 
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
     }
 
+    private void pressedRegister() {
+        Intent intent = new Intent(LoginActivity.this, NewUserActivity.class);
+        intent.putExtra(EMAIL_INTENT_EXTRA_KEY, mEmailView.getText().toString());
+        startActivity(intent);
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -138,10 +154,9 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
             loginToTheApp(email, password);
         }
     }
+
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        //return email.contains("@");
-        return true;
+        return email.contains("@");
     }
 
     @Override
@@ -245,8 +260,6 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
      */
     private void onLoginTaskCompleted(final boolean successful, User user) {
         dismissDialog();
-        mEmailView.setText("");
-        mPasswordView.setText("");
 
         if(successful) {
             Log.d("STORIESWITHFRIENDS", "Successfully logged in.");
@@ -258,6 +271,8 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
         }
         else {
             Log.w("STORIESWITHFRIENDS", "There was a problem logging in.");
+
+            mPasswordView.setText("");
 
             ErrorHelper.showError(this, "Incorrect username or password");
         }

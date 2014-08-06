@@ -66,7 +66,7 @@ public class MainMenuFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main_menu, container, false);
 
         ActionBar ab = ((android.support.v7.app.ActionBarActivity) this.getActivity()).getSupportActionBar();
-        ab.setTitle("Stories With Friends");
+        ab.setTitle(getResources().getString(R.string.app_name));
 
         yourTurnStoriesListView = (ListView) rootView.findViewById(R.id.listView_yourturnstories);
         title = (TextView) rootView.findViewById(R.id.txt_mainMenuTitle);

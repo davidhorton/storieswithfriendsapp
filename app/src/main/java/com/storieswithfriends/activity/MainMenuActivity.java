@@ -25,7 +25,8 @@ import com.storieswithfriends.util.Utils;
 public class MainMenuActivity extends ActionBarActivity
         implements MainMenuFragment.MainMenuFragmentListener,
         UnfinishedStoriesFragment.UnfinishedStoriesFragmentListener,
-        PastStoriesFragment.PastStoriesFragmentListener {
+        PastStoriesFragment.PastStoriesFragmentListener,
+        StoryFragment.StoryFragmentListener {
 
     public final static String STORY_TYPE_BUNDLE_KEY = "STORY_TYPE";
     public final static String STORY_ID_BUNDLE_KEY = "STORY_ID";
@@ -163,6 +164,17 @@ public class MainMenuActivity extends ActionBarActivity
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainer, storyFragment, STORY_MENU_FRAGMENT_TAG);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void returnToMain() {
+        Log.d("STORIESWITHFRIENDS","They selected to return to the main menu from a story.");
+        MainMenuFragment mainMenuFragment = new MainMenuFragment();
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, mainMenuFragment, MAIN_MENU_FRAGMENT_TAG);
         transaction.addToBackStack(null);
         transaction.commit();
     }

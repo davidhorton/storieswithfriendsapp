@@ -21,11 +21,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/editText2"
         android:text="@string/text_its_your_turn_stories"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/abc_dropdownitem_text_padding_left"
         android:textStyle="bold"
         android:textSize="@dimen/abc_action_bar_title_text_size"
-        android:textColor="@color/button_background" />
+        android:textColor="@color/button_background"
+        android:layout_marginTop="@dimen/activity_vertical_margin" />
 
     <ListView
         android:layout_width="wrap_content"

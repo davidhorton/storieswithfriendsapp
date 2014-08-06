@@ -1,5 +1,6 @@
 package com.storieswithfriends.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -13,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.storieswithfriends.R;
 import com.storieswithfriends.activity.MainMenuActivity;
@@ -21,6 +21,7 @@ import com.storieswithfriends.data.CurrentUser;
 import com.storieswithfriends.data.Story;
 import com.storieswithfriends.data.Word;
 import com.storieswithfriends.http.RESTHelper;
+import com.storieswithfriends.http.RandomWordService;
 import com.storieswithfriends.http.StoriesService;
 import com.storieswithfriends.util.StoryType;
 import com.storieswithfriends.util.FlowLayout;
@@ -38,11 +39,31 @@ import retrofit.client.Response;
  */
 public class StoryFragment extends Fragment {
 
+    public interface StoryFragmentListener {
+        public void returnToMain();
+    }
+    private StoryFragmentListener listener;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        listener = (StoryFragmentListener) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
     private Story story;
     private StoryType storyType;
     private ProgressDialogFragment progressDialogFragment;
     private FlowLayout layout;
     private EditText yourTurnWordEdit;
+    private LinearLayout yourTurnButtons;
+    private final static String LAST_WORD_IN_STORY = "the_end.";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,9 +89,10 @@ public class StoryFragment extends Fragment {
             storyType = StoryType.UNFINISHED;
         }
 
+        yourTurnButtons = (LinearLayout)view.findViewById(R.id.yourTurnButtonsContainer);
+
         //If it's anything besides a your turn scenario, we don't want to display the word submit buttons
         if(storyType != StoryType.YOUR_TURN) {
-            LinearLayout yourTurnButtons = (LinearLayout)view.findViewById(R.id.yourTurnButtonsContainer);
             yourTurnButtons.setVisibility(View.GONE);
         }
 
@@ -80,9 +102,23 @@ public class StoryFragment extends Fragment {
         submitButton.setOnClickListener(submitPressed);
         Button randomWordButton = (Button)view.findViewById(R.id.btn_generate_random_word);
         randomWordButton.setOnClickListener(randomWordPressed);
+        Button finishStory = (Button)view.findViewById(R.id.btn_finish_story);
+        finishStory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                yourTurnWordEdit.setText(LAST_WORD_IN_STORY);
+            }
+        });
+        Button returnToMain = (Button)view.findViewById(R.id.btn_return_to_main);
+        returnToMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.returnToMain();
+            }
+        });
 
         //Go fetch the story JSON
-        getStory(storyId, storyTitle);
+        getStory(true, storyId, storyTitle);
 
         return view;
     }
@@ -109,6 +145,9 @@ public class StoryFragment extends Fragment {
         @Override
         public void onClick(View view) {
             Log.d("STORIESWITHFRIENDS", "They pressed the submit word button.");
+
+            // Reset errors.
+            yourTurnWordEdit.setError(null);
 
             // Store values at the time of the post attempt.
             String newWord = yourTurnWordEdit.getText().toString();
@@ -137,10 +176,10 @@ public class StoryFragment extends Fragment {
         }
     };
 
-    private void postNewWord(String word) {
+    private void postNewWord(final String word) {
         showProgress("Please wait", "Adding the new word...", "");
 
-        RestAdapter restAdapter = RESTHelper.setUpRestAdapterWithJsonResponse(this.getActivity().getBaseContext(), null);
+        RestAdapter restAdapter = RESTHelper.setUpRestAdapterWithoutJsonResponse(this.getActivity().getBaseContext());
 
         StoriesService service = restAdapter.create(StoriesService.class);
 
@@ -149,9 +188,17 @@ public class StoryFragment extends Fragment {
             public void success(String stringResponse, Response response) {
                 Log.d("STORIESWITHFRIENDS", "Callback successful.");
 
-                dismissDialog();
+                layout.removeAllViews();
+                yourTurnButtons.setVisibility(View.GONE);
 
-                //TODO refresh the story now with the new word?
+                if(LAST_WORD_IN_STORY.equals(word)) {
+                    storyType = StoryType.PAST;
+                }
+                else {
+                    storyType = StoryType.UNFINISHED;
+                }
+
+                getStory(false, story.getId(), story.getTitle());
             }
 
             @Override
@@ -167,8 +214,30 @@ public class StoryFragment extends Fragment {
         @Override
         public void onClick(View view) {
             Log.d("STORIESWITHFRIENDS", "They pressed the random word button.");
+
+            getRandomWord();
         }
     };
+
+    private void getRandomWord() {
+        RestAdapter restAdapter = RESTHelper.setupRestAdapterBuilderForRandomWord(this.getActivity().getBaseContext());
+
+        RandomWordService service = restAdapter.create(RandomWordService.class);
+
+        service.getRandomWord(new Callback<String>() {
+            @Override
+            public void success(String randomString, Response response) {
+                Log.d("STORIESWITHFRIENDS", "Here is the random string: " + randomString);
+
+                yourTurnWordEdit.setText(randomString.trim());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                error.printStackTrace();
+            }
+        });
+    }
 
     private View.OnClickListener wordPressed = new View.OnClickListener() {
         @Override
@@ -190,9 +259,11 @@ public class StoryFragment extends Fragment {
         Utils.centerDialogMessageAndShow(builder);
     }
 
-    private void getStory(String storyId, String storyTitle) {
+    private void getStory(final boolean withDialog, String storyId, String storyTitle) {
 
-        showProgress("Please wait", "Retrieving " + storyTitle + "...", "");
+        if(withDialog) {
+            showProgress("Please wait", "Retrieving " + storyTitle + "...", "");
+        }
 
         RestAdapter restAdapter = RESTHelper.setUpRestAdapterWithJsonResponse(this.getActivity().getBaseContext(), null);
 
@@ -209,12 +280,15 @@ public class StoryFragment extends Fragment {
                     layout.addView(generateBodyTextView(returnedStory.getWords().get(i)), 0);
                 }
 
-                if(storyType == StoryType.YOUR_TURN) {
+                //If the user clicked on it from "Your turn" stories or got to it from "Unfinished" and it is their turn, we do the same thing with it.
+                if(storyType == StoryType.YOUR_TURN || CurrentUser.getCurrentLoggedInUser().getUsername().equals(story.getWhoseTurn().getUsername())) {
+                    yourTurnButtons.setVisibility(View.VISIBLE);
                     addYourTurnEditText();
                 }
                 else if(storyType == StoryType.UNFINISHED) {
-                    addUnfinishedTextView();
+                    addUnfinishedText();
                 }
+                //TODO if it's all done, add some way to share it via Facebook?
 
                 dismissDialog();
             }
@@ -222,6 +296,7 @@ public class StoryFragment extends Fragment {
             @Override
             public void failure(RetrofitError error) {
                 dismissDialog();
+
                 Log.d("STORIESWITHFRIENDS", "Callback failed: " + error.toString());
                 error.printStackTrace();
             }
@@ -230,14 +305,16 @@ public class StoryFragment extends Fragment {
 
     private void addYourTurnEditText() {
         yourTurnWordEdit = new EditText(this.getActivity());
-        yourTurnWordEdit.setHint("Enter your new word here, then hit submit.");
+        yourTurnWordEdit.setHint("New word goes here");
         layout.addView(yourTurnWordEdit);
     }
 
-    private void addUnfinishedTextView() {
-        TextView unfinishedText = new TextView(this.getActivity());
-        unfinishedText.setText("It's " + story.getWhoseTurn().getDisplayName() + "'s turn to put in the next word");
-        layout.addView(unfinishedText);
+    private void addUnfinishedText() {
+        Button unfinished = new Button(this.getActivity());
+        unfinished.setTextSize(15);
+        unfinished.setText("It's " + story.getWhoseTurn().getDisplayName() + "'s turn");
+        unfinished.setBackgroundColor(getResources().getColor(R.color.button_background_pressed));
+        layout.addView(unfinished);
     }
 
     /**

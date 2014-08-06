@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Stories With Friends</string>
     <string name="icon.description">Logo icon</string>
     <string name="password_hint">Password</string>
@@ -8,6 +10,7 @@
     <string name="btn_past_stories">Browse my past stories</string>
     <string name="btn_unfinishedstories">Browse my unfinished stories</string>
     <string name="api_endpoint">http://storieswithfriends.herokuapp.com/</string>
+    <string name="api_endpoint_randomword">http://randomword.setgetgo.com/get.php</string>
     <string name="uh_oh">Uh oh…</string>
     <string name="okay">Okay</string>
     <string name="notice">Notice…</string>
@@ -19,8 +22,19 @@
     <string name="logout_message">Are you sure you want to logout?</string>
     <string name="emptyYourTurnList">There aren\'t any stories where it\'s your turn... Sad day.</string>
     <string name="emptyStoryList">None</string>
-    <string name="btn_random_word">Get Random Word</string>
+    <string name="btn_random_word">Add Random</string>
     <string name="btn_submit_word">Submit Word</string>
+    <string name="btn_finish_story">Finish Story</string>
+    <string name="btn_return_to_main">Return to Main Menu</string>
     <string name="done">Done</string>
+    <string name="title_activity_new_user">NewUserActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="txt_new_user_username">Email:</string>
+    <string name="txt_new_user_display">Display Name:</string>
+    <string name="txt_new_user_password1">Password:</string>
+    <string name="txt_new_user_password2">Re-enter password:</string>
+    <string name="btn_new_user_submit">Create Account</string>
+    <string name="title_activity_new_story">NewStoryActivity</string>
 
 </resources>
