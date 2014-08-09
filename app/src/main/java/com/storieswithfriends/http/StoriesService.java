@@ -45,4 +45,8 @@ public interface StoriesService {
     @FormUrlEncoded
     @POST("/rest/story/login")
     public void loginToTheApp(@Field("username") String username, @Field("password") String password, Callback<User> cb);
+
+    @FormUrlEncoded
+    @POST("/rest/story/usernameexists")
+    public void usernameExists(@Field("username") String username, Callback<String> cb);
 }

@@ -3,6 +3,7 @@ package com.storieswithfriends.activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -68,6 +69,9 @@ public class MainMenuActivity extends ActionBarActivity
             case R.id.action_logout:
                 logoutPrompt();
                 return true;
+            case R.id.action_add_new_story:
+                Intent intent = new Intent(MainMenuActivity.this, NewStoryActivity.class);
+                startActivity(intent);
             default:
                 break;
         }

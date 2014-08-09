@@ -123,19 +123,19 @@ public class NewUserActivity extends ActionBarActivity {
             @Override
             public void success(String s, Response response) {
                 Log.d("STORIESWITHFRIENDS", "Callback was successful");
-                onLoginTaskCompleted(true);
+                onNewUserTaskCompleted(true);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.d("STORIESWITHFRIENDS", "Callback failed: " + error.toString());
                 error.printStackTrace();
-                onLoginTaskCompleted(false);
+                onNewUserTaskCompleted(false);
             }
         });
     }
 
-    public void onLoginTaskCompleted(boolean successful) {
+    public void onNewUserTaskCompleted(boolean successful) {
 
         dismissDialog();
 

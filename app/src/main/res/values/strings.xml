@@ -36,5 +36,11 @@
     <string name="txt_new_user_password2">Re-enter password:</string>
     <string name="btn_new_user_submit">Create Account</string>
     <string name="title_activity_new_story">NewStoryActivity</string>
+    <string name="txt_new_story_title">Title:</string>
+    <string name="txt_new_story_first_word">First word:</string>
+    <string name="btn_new_story_submit">Create Story</string>
+    <string name="txt_new_story_participants">Participants:</string>
+    <string name="txt_new_story_participant_email">Email:</string>
+    <string name="btn_new_story_participant_submit">Done</string>
 
 </resources>

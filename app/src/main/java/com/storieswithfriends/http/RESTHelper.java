@@ -71,6 +71,33 @@ public class RESTHelper {
     }
 
     /**
+     * Sets up the RestAdapter, with a JSON response
+     * @param context Android context
+     * @param gson GSON that will be used to convert the data of the request to JSON
+     * @return RestAdapter
+     */
+    public static RestAdapter setUpRestAdapterWithoutJsonResponseAndGSON(Context context, Gson gson) {
+        RestAdapter.Builder builder = setUpRestAdapterBuilder(context);
+
+        GsonConverter converter = new GsonConverter(gson){
+            @Override
+            public Object fromBody(TypedInput body, Type type) throws ConversionException {
+                try {
+                    return RESTHelper.convertStreamToString(body.in());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return "COULDN'T PARSE SERVER RESPONSE.";
+            }
+        };
+
+        builder.setConverter(converter);
+
+        return builder.build();
+    }
+
+    /**
      * Sets up the RestAdapter Builder
      * @param context Android Context
      * @return RestAdapter Builder

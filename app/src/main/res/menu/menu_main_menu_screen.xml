@@ -8,7 +8,7 @@
         android:orderInCategory="100"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/action_add"
+        android:id="@+id/action_add_new_story"
         android:orderInCategory="0"
         app:showAsAction="ifRoom|withText"
         android:title="New Story"
