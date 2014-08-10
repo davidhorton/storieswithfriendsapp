@@ -23,6 +23,7 @@ import android.widget.EditText;
 import com.storieswithfriends.R;
 import com.storieswithfriends.data.CurrentUser;
 import com.storieswithfriends.data.User;
+import com.storieswithfriends.fragment.MainMenuFragment;
 import com.storieswithfriends.fragment.ProgressDialogFragment;
 import com.storieswithfriends.http.RESTHelper;
 import com.storieswithfriends.http.StoriesService;
@@ -252,6 +253,11 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
                 onLoginTaskCompleted(false, null);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        //Do nothing
     }
 
     /**

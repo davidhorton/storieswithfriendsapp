@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.storieswithfriends.R;
-import com.storieswithfriends.activity.MainMenuActivity;
+import com.storieswithfriends.activity.NewStoryActivity;
 import com.storieswithfriends.http.RESTHelper;
 import com.storieswithfriends.http.StoriesService;
 import com.storieswithfriends.util.ErrorHelper;
@@ -29,7 +29,7 @@ import retrofit.client.Response;
 public class AddParticipantFragment extends Fragment {
 
     public interface AddParticipantFragmentListener {
-        public void returnToNewStory(String newParticipantEmail);
+        public void addParticipant(String newParticipantEmail);
     }
 
     private AddParticipantFragmentListener listener;
@@ -134,7 +134,7 @@ public class AddParticipantFragment extends Fragment {
 
         if(successful) {
             if(exists) {
-                listener.returnToNewStory(username);
+                listener.addParticipant(username);
             }
             else {
                 ErrorHelper.showError(this.getActivity(), "User " + username + " doesn't exist.");
@@ -165,7 +165,7 @@ public class AddParticipantFragment extends Fragment {
      */
     private void showProgress(String title, String message, String tag) {
         progressDialogFragment = ProgressDialogFragment.newInstance(title, message);
-        progressDialogFragment.show(((MainMenuActivity)this.getActivity()).getSupportFragmentManager(), tag);
+        progressDialogFragment.show(((NewStoryActivity)this.getActivity()).getSupportFragmentManager(), tag);
     }
 
     /**

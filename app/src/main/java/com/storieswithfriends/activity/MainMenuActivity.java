@@ -46,7 +46,7 @@ public class MainMenuActivity extends ActionBarActivity
         if (savedInstanceState != null)
             return;
 
-        //Create CourseListFragment
+        //Create MainMenu fragment
         MainMenuFragment mainMenuFragment = new MainMenuFragment();
 
         //Add the fragment to the FrameLayout
@@ -83,8 +83,6 @@ public class MainMenuActivity extends ActionBarActivity
     public void onBackPressed() {
         //I have logic here so that it only does the logout prompt if they are on the main menu.
         MainMenuFragment mainMenuFragment = (MainMenuFragment)getFragmentManager().findFragmentByTag(MAIN_MENU_FRAGMENT_TAG);
-        //PastStoriesFragment pastStoriesFragment = (PastStoriesFragment)getFragmentManager().findFragmentByTag(PAST_STORIES_FRAGMENT_TAG);
-        //UnfinishedStoriesFragment unfinishedStoriesFragment = (UnfinishedStoriesFragment)getFragmentManager().findFragmentByTag(UNFINISHED_STORIES_FRAGMENT_TAG);
 
         if (mainMenuFragment!= null && mainMenuFragment.isVisible()) {
             logoutPrompt();

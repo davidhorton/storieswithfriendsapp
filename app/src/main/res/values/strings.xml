@@ -42,5 +42,6 @@
     <string name="txt_new_story_participants">Participants:</string>
     <string name="txt_new_story_participant_email">Email:</string>
     <string name="btn_new_story_participant_submit">Done</string>
+    <string name="btn_new_participant_description">Add new participant</string>
 
 </resources>

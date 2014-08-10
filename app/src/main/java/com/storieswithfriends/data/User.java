@@ -70,6 +70,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User: " + this.getUsername() + ", Display: " + this.getDisplayName() + ", Order Position: " + this.getOrderPosition();
+        return this.getOrderPosition() + " - " + this.getUsername();
     }
 }
