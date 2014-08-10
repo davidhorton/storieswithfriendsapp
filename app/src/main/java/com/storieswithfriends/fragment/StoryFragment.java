@@ -281,11 +281,9 @@ public class StoryFragment extends Fragment {
                 }
 
                 //If the user clicked on it from "Your turn" stories or got to it from "Unfinished" and it is their turn, we do the same thing with it.
-                if(storyType == StoryType.YOUR_TURN || storyType == StoryType.UNFINISHED) {
-                    if(CurrentUser.getCurrentLoggedInUser().getUsername().equals(story.getWhoseTurn().getUsername())) {
-                        yourTurnButtons.setVisibility(View.VISIBLE);
-                        addYourTurnEditText();
-                    }
+                if((storyType == StoryType.YOUR_TURN || storyType == StoryType.UNFINISHED) && CurrentUser.getCurrentLoggedInUser().getUsername().equals(story.getWhoseTurn().getUsername())) {
+                    yourTurnButtons.setVisibility(View.VISIBLE);
+                    addYourTurnEditText();
                 }
                 else if(storyType == StoryType.UNFINISHED) {
                     addUnfinishedText();
